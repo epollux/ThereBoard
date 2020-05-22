@@ -21,6 +21,9 @@ const DeviceSchema = new mongoose.Schema(
       required: [true, "Please add a description"],
       maxlength: [500, "Description can not be more than 500 characters"],
     },
+    apikey: {
+      type: String,
+    },
     address: {
       type: String,
       required: [true, "Please add an address"],
@@ -42,19 +45,6 @@ const DeviceSchema = new mongoose.Schema(
       zipcode: String,
       country: String,
     },
-    careers: {
-      // Array of strings
-      type: [String],
-      required: true,
-      enum: [
-        "Web Development",
-        "Mobile Development",
-        "UI/UX",
-        "Data Science",
-        "Business",
-        "Other",
-      ],
-    },
     lastSeen: {
       type: Date,
     },
@@ -74,12 +64,12 @@ const DeviceSchema = new mongoose.Schema(
   }
 );
 
-// Geocode & create location field
+// API Key
 DeviceSchema.pre("save", async function (next) {
-  if (!this.device_id) {
+  if (!this.apikey) {
     next();
   }
-  this.device_id = hat();
+  this.apikey = hat();
 });
 
 // Geocode & create location field

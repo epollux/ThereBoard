@@ -18,6 +18,8 @@ connectDB();
 const users = require("./routes/users");
 const index = require("./routes/index");
 const boards = require("./routes/boards");
+const devices = require("./routes/devices");
+const services = require("./routes/services");
 const auth = require("./routes/auth");
 
 // Express
@@ -51,6 +53,8 @@ if (process.env.NODE_ENV === "development") {
 app.use("/api/v1/", index);
 app.use("/api/v1/users", users);
 app.use("/api/v1/boards", boards);
+app.use("/api/v1/devices", devices);
+app.use("/api/v1/services", services);
 app.use("/api/v1/auth", auth);
 
 // Dev Logging middleware

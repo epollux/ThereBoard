@@ -22,6 +22,11 @@ const ServiceSchema = new mongoose.Schema({
     ref: "Device",
     required: true,
   },
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Service", ServiceSchema);
