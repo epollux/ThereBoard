@@ -1,1 +1,1 @@
-api: node index.js
+api: nodemon index.js

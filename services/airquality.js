@@ -3,18 +3,19 @@ const BusinessLogic = require("./businesslogic");
 
 class AirQuality extends BusinessLogic {
   constructor(lat, lon) {
+    super();
     this.lat = lat;
     this.lon = lon;
   }
 
   async fetch() {
     try {
-      const url = `${process.env.AIRQUALITY_URL}/airquality?lon=${this.lon}&lat=${this.lat}&key=${process.env.AIRQUALITY_APIKEY}`;
+      const url = `${process.env.AIRQUAL_URL}airquality?lon=${this.lon}&lat=${this.lat}&key=${process.env.AIRQUAL_APIKEY}`;
       const response = await fetch(url);
       this.data = await response.json();
-      console.log(json);
+      console.log(this.data);
     } catch (error) {
-      console.log(error);
+      console.log(`Fetch error: ${error}`);
     }
   }
 }
