@@ -54,7 +54,7 @@ exports.addService = asyncHandler(async (req, res, next) => {
 
   if (!device) {
     return next(
-      new ErrorResponse(`No device with the id of ${req.params.bootcampId}`),
+      new ErrorResponse(`No device with the id of ${req.params.deviceId}`),
       404
     );
   }

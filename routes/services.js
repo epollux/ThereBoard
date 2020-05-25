@@ -5,7 +5,7 @@ const {
   addService,
   updateService,
   deleteService,
-} = require("../controllers/Services");
+} = require("../controllers/services");
 
 const Service = require("../models/Service");
 

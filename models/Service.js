@@ -11,7 +11,7 @@ const ServiceSchema = new mongoose.Schema({
     required: [true, "Please add an implementation name"],
   },
   parameters: {
-    type: String,
+    type: [],
   },
   createdAt: {
     type: Date,

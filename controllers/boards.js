@@ -7,8 +7,6 @@ const refreshDevice = require("../services/refreshdevice");
 // @route     GET /api/v1/boards/:id/refresh
 // @access    Private
 exports.refresh = asyncHandler(async (req, res, next) => {
-  console.log(`refresh board: ${req.params.id}`);
-
   // verify board id and api key
   const device = await Device.findById(req.params.id).populate({
     path: "services",
@@ -30,14 +28,16 @@ exports.refresh = asyncHandler(async (req, res, next) => {
       )
     );
   }
-  // call refresh service with device data model
-  const refreshdata = await refreshDevice(device);
 
-  if (!refreshdata) {
+  // call refresh service with device data model
+  const refreshData = await refreshDevice(device);
+  console.log(`json data: ${refreshData}`);
+
+  if (!refreshData) {
     return next(
       new ErrorResponse(`Error Refresh data for device ${req.params.id}`),
       404
     );
   }
-  res.status(200).json({ success: true, data: refreshdata });
+  res.status(200).json({ success: true, data: refreshData });
 });
