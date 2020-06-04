@@ -21,8 +21,6 @@ class AirQuality extends ExternalApi {
     const fetchedData = await this.callApi(url);
 
     for (var parameter of this.parameters) {
-      console.log(`AirQuality Parameter: ${parameter}`);
-
       switch (parameter) {
         case "pollen_tree":
           this.data["pollen_tree"] = fetchedData.data[0].pollen_level_tree;

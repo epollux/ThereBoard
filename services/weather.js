@@ -22,15 +22,14 @@ class Weather extends ExternalApi {
 
     const fetchedData = await this.callApi(url);
     for (var parameter of this.parameters) {
-      console.log(`AirQuality Parameter: ${parameter}`);
-
       switch (parameter) {
         case "current_temp":
-          this.data["current_temp"] = fetchedData.current.feel_like_temp;
+          this.data["feels_temp"] = fetchedData.current.feels_like;
+          this.data["temp"] = fetchedData.current.temp;
           break;
 
         case "rain_8h":
-          this.data["rain_8h"] = this.rain8h(fetchedData.hourly);
+          this.rain8h(fetchedData.hourly);
           break;
 
         default:
@@ -41,8 +40,18 @@ class Weather extends ExternalApi {
 
   rain8h(hourlyData) {
     // loop through inputData and find out if it's going to rain
+    this.data["rain_mm"] = [];
 
-    return "yes";
+    for (var hourly in hourlyData) {
+      if (hourlyData[hourly].rain) {
+        this.data["rain_mm"][hourly] = hourlyData[hourly].rain["1h"];
+      } else {
+        this.data["rain_mm"][hourly] = 0;
+      }
+      if (hourly == 7) {
+        break;
+      }
+    }
   }
 }
 

@@ -1,6 +1,7 @@
 const Device = require("../models/Device");
 const Weather = require("./weather");
 const AirQuality = require("./airquality");
+const LiveBus = require("./livebus");
 
 const refreshDevice = async (device) => {
   // loop through services and query right data
@@ -33,6 +34,18 @@ const refreshDevice = async (device) => {
         refreshData["AirQuality"] = airQuality.data;
 
         break;
+
+      case "LiveBus":
+        const liveBus = new LiveBus(
+          service.parameters[0],
+          service.parameters[1]
+        ); // Station stop in paramaters
+
+        await liveBus.getData();
+        refreshData["LiveBus"] = liveBus.data;
+
+        break;
+
       default:
         console.log(`Implementation ${service.implementation} does not exist.`);
     }
