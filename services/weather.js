@@ -32,6 +32,10 @@ class Weather extends ExternalApi {
           this.rain8h(fetchedData.hourly);
           break;
 
+        case "freeze_12h":
+          this.freeze12h(fetchedData.hourly);
+          break;
+
         default:
           console.log(`Parameter ${parameter} does not exist.`);
       }
@@ -40,6 +44,7 @@ class Weather extends ExternalApi {
 
   rain8h(hourlyData) {
     // loop through inputData and find out if it's going to rain
+    // use current weather for first measure and ignore first hourly data
     this.data["rain_mm"] = [];
 
     for (var hourly in hourlyData) {
@@ -49,6 +54,20 @@ class Weather extends ExternalApi {
         this.data["rain_mm"][hourly] = 0;
       }
       if (hourly == 7) {
+        break;
+      }
+    }
+  }
+
+  freeze12h(hourlyData) {
+    // loop through inputData and find out if tenperature is going to be below zero within the next 12h
+    this.data["freeze_12h"] = false;
+
+    for (var hourly in hourlyData) {
+      if (hourlyData[hourly].temp <= 0) {
+        this.data["freeze_12h"] = true;
+      }
+      if (hourly == 12) {
         break;
       }
     }

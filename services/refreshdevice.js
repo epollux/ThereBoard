@@ -3,6 +3,7 @@ const Weather = require("./weather");
 const AirQuality = require("./airquality");
 const LiveBus = require("./livebus");
 
+// Refresh device function
 const refreshDevice = async (device) => {
   // loop through services and query right data
   const services = device.services;
@@ -11,7 +12,7 @@ const refreshDevice = async (device) => {
   // returned data
   for (var service of device.services) {
     switch (service.implementation) {
-      case "Weather":
+      case "weather":
         const weather = new Weather(
           device.location.coordinates[1],
           device.location.coordinates[0],
@@ -19,11 +20,11 @@ const refreshDevice = async (device) => {
         );
 
         await weather.getData();
-        refreshData["Weather"] = weather.data;
+        refreshData["weather"] = weather.data;
 
         break;
 
-      case "AirQuality":
+      case "airQuality":
         const airQuality = new AirQuality(
           device.location.coordinates[1],
           device.location.coordinates[0],
@@ -31,18 +32,24 @@ const refreshDevice = async (device) => {
         );
 
         await airQuality.getData();
-        refreshData["AirQuality"] = airQuality.data;
+        refreshData["airQuality"] = airQuality.data;
 
         break;
 
-      case "LiveBus":
+      case "liveBus":
         const liveBus = new LiveBus(
-          service.parameters[0],
-          service.parameters[1]
+          service.parameters[0].stopStation,
+          service.parameters[0].lineName,
+          service.parameters[0].lbt,
+          service.parameters[0].ttw,
+          service.parameters[0].sm,
+          service.parameters[0].days
         ); // Station stop in paramaters
 
-        await liveBus.getData();
-        refreshData["LiveBus"] = liveBus.data;
+        if (liveBus.inRefreshWindow() === true) {
+          await liveBus.getData();
+          refreshData["liveBus"] = liveBus.data;
+        }
 
         break;
 

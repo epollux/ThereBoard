@@ -16,6 +16,10 @@ const DeviceSchema = new mongoose.Schema(
       enum: ["arduino", "web", "sensor"],
       default: "arduino",
     },
+    refreshRate: {
+      type: Number,
+      default: 180,
+    },
     description: {
       type: String,
       required: [true, "Please add a description"],

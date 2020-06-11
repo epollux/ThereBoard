@@ -31,7 +31,6 @@ exports.refresh = asyncHandler(async (req, res, next) => {
 
   // call refresh service with device data model
   const refreshData = await refreshDevice(device);
-  console.log(`json data: ${refreshData}`);
 
   if (!refreshData) {
     return next(
@@ -39,5 +38,5 @@ exports.refresh = asyncHandler(async (req, res, next) => {
       404
     );
   }
-  res.status(200).json({ success: true, data: refreshData });
+  res.status(200).json({ success: true, time: Date.now(), data: refreshData });
 });
