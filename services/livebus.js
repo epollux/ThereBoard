@@ -47,57 +47,61 @@ class LiveBus extends ExternalApi {
 
   // get API data
   async getData() {
-    var url =
-      process.env.TFL_URL +
-      "StopPoint/" +
-      this.busStopId +
-      "/Arrivals?app_id=" +
-      process.env.TFL_APP_ID +
-      "&app_key=" +
-      process.env.TFL_APP_KEY;
+    if (this.inRefreshWindow() == true) {
+      var url =
+        process.env.TFL_URL +
+        "StopPoint/" +
+        this.busStopId +
+        "/Arrivals?app_id=" +
+        process.env.TFL_APP_ID +
+        "&app_key=" +
+        process.env.TFL_APP_KEY;
 
-    const fetchedData = await this.callApi(url);
+      const fetchedData = await this.callApi(url);
 
-    var timeToStationArray = [];
-    var tz; // offset
+      var timeToStationArray = [];
+      var tz; // offset
 
-    const currentTime = new Date().getTime();
-    this.data["refresh"] = true;
+      const currentTime = new Date().getTime();
+      this.data["refresh"] = true;
 
-    for (var key in fetchedData) {
-      // only keep line we want
-      if (fetchedData[key].lineName == this.lineName) {
-        // get the difference in minutes between expected Arrival Time and Current Time
-        var expectedArrivalTime = new Date(fetchedData[key].expectedArrival);
+      for (var key in fetchedData) {
+        // only keep line we want
+        if (fetchedData[key].lineName == this.lineName) {
+          // get the difference in minutes between expected Arrival Time and Current Time
+          var expectedArrivalTime = new Date(fetchedData[key].expectedArrival);
 
-        var expectedArrivalTimeStamp = expectedArrivalTime.getTime();
+          var expectedArrivalTimeStamp = expectedArrivalTime.getTime();
 
-        // get the expected arrival in the format of lastBus (0830);
-        tz = new Date(fetchedData[key].expectedArrival).getTimezoneOffset();
-        var hours = Math.floor(tz / 60);
-        var minutes = tz % 60;
+          // get the expected arrival in the format of lastBus (0830);
+          tz = new Date(fetchedData[key].expectedArrival).getTimezoneOffset();
+          var hours = Math.floor(tz / 60);
+          var minutes = tz % 60;
 
-        var localTimeArrivalHM =
-          pad(expectedArrivalTime.getHours() + hours).toString() +
-          pad(expectedArrivalTime.getMinutes() + minutes).toString();
+          var localTimeArrivalHM =
+            pad(expectedArrivalTime.getHours() + hours).toString() +
+            pad(expectedArrivalTime.getMinutes() + minutes).toString();
 
-        if (localTimeArrivalHM <= this.lastBus) {
-          var minutesDiff = Math.round(
-            (expectedArrivalTimeStamp - currentTime) / (60 * 1000)
-          );
+          if (localTimeArrivalHM <= this.lastBus) {
+            var minutesDiff = Math.round(
+              (expectedArrivalTimeStamp - currentTime) / (60 * 1000)
+            );
 
-          var leaveIn = minutesDiff - this.timeToWalk;
+            var leaveIn = minutesDiff - this.timeToWalk;
 
-          // exclude buses leaving too early, add minutes to leave to array
-          if (leaveIn > 0) {
-            timeToStationArray.push(leaveIn);
+            // exclude buses leaving too early, add minutes to leave to array
+            if (leaveIn > 0) {
+              timeToStationArray.push(leaveIn);
+            }
           }
         }
       }
+      this.data["time_to_station"] = timeToStationArray.sort(function (a, b) {
+        return b - a;
+      });
+    } else {
+      this.data["refresh"] = false;
     }
-    this.data["time_to_station"] = timeToStationArray.sort(function (a, b) {
-      return b - a;
-    });
   }
 }
 

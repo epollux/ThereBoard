@@ -46,10 +46,8 @@ const refreshDevice = async (device) => {
           service.parameters[0].days
         ); // Station stop in paramaters
 
-        if (liveBus.inRefreshWindow() === true) {
-          await liveBus.getData();
-          refreshData["liveBus"] = liveBus.data;
-        }
+        await liveBus.getData();
+        refreshData["liveBus"] = liveBus.data;
 
         break;
 
