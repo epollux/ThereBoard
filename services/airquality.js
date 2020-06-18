@@ -20,26 +20,28 @@ class AirQuality extends ExternalApi {
 
     const fetchedData = await this.callApi(url);
 
-    for (var parameter of this.parameters) {
-      switch (parameter) {
-        case "pollen_tree":
-          this.data["pollen_tree"] = fetchedData.data[0].pollen_level_tree;
-          break;
+    if (fetchedData.hasOwnProperty("data")) {
+      for (var parameter of this.parameters) {
+        switch (parameter) {
+          case "pollen_tree":
+            this.data["pollen_tree"] = fetchedData.data[0].pollen_level_tree;
+            break;
 
-        case "pollen_weed":
-          this.data["pollen_weed"] = fetchedData.data[0].pollen_level_weed;
-          break;
+          case "pollen_weed":
+            this.data["pollen_weed"] = fetchedData.data[0].pollen_level_weed;
+            break;
 
-        case "pollen_grass":
-          this.data["pollen_grass"] = fetchedData.data[0].pollen_level_grass;
-          break;
+          case "pollen_grass":
+            this.data["pollen_grass"] = fetchedData.data[0].pollen_level_grass;
+            break;
 
-        case "airquality":
-          this.data["airquality"] = fetchedData.data[0].aqi;
-          break;
+          case "airquality":
+            this.data["airquality"] = fetchedData.data[0].aqi;
+            break;
 
-        default:
-          console.log(`Parameter ${parameter} does not exist.`);
+          default:
+            console.log(`Parameter ${parameter} does not exist.`);
+        }
       }
     }
   }

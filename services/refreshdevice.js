@@ -32,8 +32,10 @@ const refreshDevice = async (device) => {
         );
 
         await airQuality.getData();
-        refreshData["airQuality"] = airQuality.data;
-
+        console.log(airQuality.data);
+        if (JSON.stringify(airQuality.data) !== "{}") {
+          refreshData["airQuality"] = airQuality.data;
+        }
         break;
 
       case "liveBus":
